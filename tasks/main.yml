@@ -1,0 +1,14 @@
+---
+- name: Install pip
+  apt: name=python-pip state=latest update_cache=true
+
+- name: Install awscli
+  pip: name=awscli state=latest
+
+- name: Create .aws directory
+  action: file dest=/{{item}}/.aws state=directory owner={{item}} group={{item}}
+  with_items: admin_users
+
+- name: Copy awscli configuration
+  template: src=config.j2 dest=/{{item}}/.aws/config mode=0600 owner={{item}} group={{item}}
+  with_items: admin_users
